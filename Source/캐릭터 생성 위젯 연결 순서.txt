@@ -1,0 +1,42 @@
+- 캐릭터 선택 창 widget
+
+1. MyGameModeBase.h
+	ㄴ AMyGameModeBase() : 초기화 값들 지정
+	ㄴ BeginPlay() 부모로 override를 받아옴
+	ㄴ UFUNCTION() SetPlayerCharacter(CharacterClass) 함수 생성 
+	ㄴ SetPlayerCharacter에 파라미터 CharacterClass 와 연결할 내부변수 SelectedCharacterClass 선언
+2. MyGameModeBase.cpp
+	ㄴ AMyGameModeBase() 
+		ㄴ ConstructorHelpers를 통해 Pawn 디폴트 값 지정 (Path 참조)
+		ㄴ ConstructorHelpers를 통해 PlayerControllerClass 디폴트 값 지정 (Path 참조)
+	ㄴ BeginPlay()
+		ㄴ 내부함수 SelectedCharacterClass 선언된 캐릭터를 기본 캐릭터로 지정
+		ㄴ UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess(GetWorld()->SpawnActor<AMyPaperCharacter_ZD>(SelectedCharacterClass));
+	ㄴ SetPlayerCharacter(CharacterClass) 함수 생성
+		ㄴ 내부함수 SelectedCharacterClass 와 NewCharacter 연결 
+
+3. MyPlayerController.h 
+	ㄴ public으로 선언 UPROPERTY() TSubclassOf<class UCharacterSelectWidget> CharacterSelectWidgetClass;   
+4. MyPlayerController.cpp 
+	ㄴ Beginplay() 에서 CreateWidget에 클래스 연결 
+UUserWidget* CharacterSelectWidget = CreateWidget<UUserWidget>  (this,CharacterSelectWidgetClass); 
+	ㄴ CharacterSelectWidget을 AddToViewPort() 연결
+	
+5. CharacterSelectWidget.h
+Class 변수 선언은 TSubclassOf<클래스> ,Object변수 선언 TObjectPtr<클래스> - 포인터 방식
+	ㄴ paperzd로 구성된 캐릭터 클래스를 가져와 Characterclass 옵션 선언 x3 
+	ㄴ 위젯에 버튼을 통해 선택할 버튼 3개 생성
+	ㄴ 선택한 버튼과 선택할 캐릭터를 이어줄 OnCharacterSelected 3개 생성 
+	ㄴ NativeConstruct() : 버튼 OnClicked 이벤트 함수 초기화 = 생성자로 override 선언 	
+	ㄴ OnCharacterSelected() 3개 함수
+6. CharacterSelectWidget.cpp
+	ㄴ NativeConstruct()
+		ㄴ 버튼 3개 생성에 OnClicked에 addDynamic로 OnCharacterSelected 선택 함수 를 이어줌
+	ㄴ OnCharacterSelected() 3개 함수
+        AMyGameModeBase* GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld())); 선언	
+	ㄴ선언된 GameMode에 MyPlayerController에서 선언한 함수 SetPlayerCharsatcer(CharacterClass)를 포인터 값 전달
+
+7. 블루프린트 생성 -> 위젯 생성시 부모를 만든 C++ 클래스를 상속 받음
+8. 버튼 생성시 c++에서 변수 선언한 이름과 같아야함 	
+
+ 
