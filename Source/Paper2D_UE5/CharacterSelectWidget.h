@@ -6,8 +6,6 @@
 #include "Blueprint/UserWidget.h"
 #include "CharacterSelectWidget.generated.h"
 
-class AMyPaperCharacter_ZD;
-class BindWidget;
 
 /**
  * 
@@ -20,13 +18,13 @@ class PAPER2D_UE5_API UCharacterSelectWidget : public UUserWidget
 public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
-    TSubclassOf<AMyPaperCharacter_ZD> CharacterClass1;
+    TSubclassOf<ACharacter> CharacterClass1;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
-    TSubclassOf<AMyPaperCharacter_ZD> CharacterClass2;
+    TSubclassOf<ACharacter> CharacterClass2;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
-    TSubclassOf<AMyPaperCharacter_ZD> CharacterClass3;
+    TSubclassOf<ACharacter> CharacterClass3;
 
 
     UPROPERTY(meta = (BindWidget))
@@ -50,5 +48,8 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Character")
     void OnCharacter3Selected();
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    void HideCharacterSelectWidget();
 	
 };

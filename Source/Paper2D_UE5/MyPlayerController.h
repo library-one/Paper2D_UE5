@@ -47,6 +47,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> IA_Jump;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> IA_ToggleCharacterSelect;
+
 	// Input Mapping Context
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputMappingContext> IMC_SideScroller;
@@ -55,5 +58,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<class UCharacterSelectWidget> CharacterSelectWidgetClass;
 
+	UFUNCTION()
+	void ToggleCharacterSelectWidget();
+
+private:
+	UPROPERTY()	
+	UCharacterSelectWidget* CharacterSelectWidgetInstance;
+
+	//마우스 커서 Show/HIde
+	void ShowMouseCursor(bool bShow);
 	
 };

@@ -50,12 +50,13 @@ void AMyPlayerController::BeginPlay()
     {
         UE_LOG(LogTemp, Warning, TEXT("CharacterSelectWidgetClass"));
 
-        UUserWidget* CharacterSelectWidget = CreateWidget<UUserWidget>(this, CharacterSelectWidgetClass);
-        if (CharacterSelectWidget)
+        CharacterSelectWidgetInstance = CreateWidget<UCharacterSelectWidget>(this, CharacterSelectWidgetClass);
+        if (CharacterSelectWidgetInstance)
         {
             UE_LOG(LogTemp, Warning, TEXT("AddToViewport"));
 
-            CharacterSelectWidget->AddToViewport();
+            CharacterSelectWidgetInstance->AddToViewport();
+            CharacterSelectWidgetInstance->SetVisibility(ESlateVisibility::Hidden);
         }
     }
 
@@ -71,8 +72,54 @@ void AMyPlayerController::SetupInputComponent()
         EnhancedInputComponent->BindAction(IA_Walk.Get(), ETriggerEvent::Triggered, this, &AMyPlayerController::Walk);        
         EnhancedInputComponent->BindAction(IA_Attack.Get(), ETriggerEvent::Triggered, this, &AMyPlayerController::Attack);
         //EnhancedInputComponent->BindAction(IA_Jump.Get(), ETriggerEvent::Triggered, this, &AMyPlayerController::Jump);
+
+
+        //케릭터 선택창 토글
+        EnhancedInputComponent->BindAction(IA_ToggleCharacterSelect.Get(), ETriggerEvent::Triggered, this, &AMyPlayerController::ToggleCharacterSelectWidget);
+
+    }
+   /* else
+    {
+        InputComponent->BindAction("ToggleCharacterSelect", IE_Pressed, this, &AMyPlayerController::ToggleCharacterSelectWidget);
+    }*/
+    
+
+    
+}
+
+
+void AMyPlayerController::ToggleCharacterSelectWidget()
+{
+
+    if (CharacterSelectWidgetInstance)
+    {
+        if (CharacterSelectWidgetInstance->IsVisible())
+        {
+            CharacterSelectWidgetInstance->SetVisibility(ESlateVisibility::Hidden);
+            ShowMouseCursor(false);
+        }
+        else
+        {
+            CharacterSelectWidgetInstance->SetVisibility(ESlateVisibility::Visible);
+            ShowMouseCursor(true);
+        }
     }
 }
+
+void AMyPlayerController::ShowMouseCursor(bool bShow)
+{
+    bShowMouseCursor = bShow;
+    if (bShow)
+    {
+        SetInputMode(FInputModeUIOnly());
+    }
+    else
+    {
+        SetInputMode(FInputModeGameOnly());
+    }
+}
+
+
 
 void AMyPlayerController::Move(const FInputActionValue& Value)
 {
@@ -89,18 +136,7 @@ void AMyPlayerController::Move(const FInputActionValue& Value)
         {
             MyCharacter_ZD->Move(MovementVector.X);
         }
-    }  
-
-
-   /*
-    if (APawn* ControlledPawn = GetPawn())
-    {
-        if (AMyPaperCharacter* MyCharacter = Cast<AMyPaperCharacter>(ControlledPawn))
-        {            
-            MyCharacter->Move(Value);
-        }
     }
-    */
 }
 
 void AMyPlayerController::Walk(const FInputActionValue& Value)

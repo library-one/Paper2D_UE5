@@ -33,7 +33,8 @@ void UCharacterSelectWidget::OnCharacter1Selected()
     AMyGameModeBase* GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
     if (GameMode)
     {
-        GameMode->SetPlayerCharacter(CharacterClass1);
+        GameMode->SetPlayerCharacter(CharacterClass1);        
+        HideCharacterSelectWidget();
         UE_LOG(LogTemp, Warning, TEXT("CharacterClass1 가 선택되었습니다."));
     }
 }
@@ -43,7 +44,8 @@ void UCharacterSelectWidget::OnCharacter2Selected()
     AMyGameModeBase* GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
     if (GameMode)
     {
-        GameMode->SetPlayerCharacter(CharacterClass2);
+        GameMode->SetPlayerCharacter(CharacterClass2);        
+        HideCharacterSelectWidget();
 
         UE_LOG(LogTemp, Warning, TEXT("CharacterClass2 가 선택되었습니다."));
     }
@@ -53,9 +55,22 @@ void UCharacterSelectWidget::OnCharacter3Selected()
 {
     AMyGameModeBase* GameMode = Cast<AMyGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
     if (GameMode)
-    {
-        GameMode->SetPlayerCharacter(CharacterClass3);
+    {        
+        GameMode->SetPlayerCharacter(CharacterClass3);        
+        HideCharacterSelectWidget();
 
         UE_LOG(LogTemp, Warning, TEXT("CharacterClass3 가 선택되었습니다."));
+    }
+}
+
+void UCharacterSelectWidget::HideCharacterSelectWidget()
+{
+    //Show/HIde    
+    SetVisibility(ESlateVisibility::Hidden);
+    APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+    if (PlayerController)
+    {
+        PlayerController->bShowMouseCursor = false;
+        PlayerController->SetInputMode(FInputModeGameOnly());
     }
 }

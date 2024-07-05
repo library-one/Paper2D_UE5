@@ -78,7 +78,7 @@ void AMyPaperCharacter_ZD::Move(float Value)
 {
     AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);    
     TurnRight(Value);
-    UE_LOG(LogTemp, Warning, TEXT("Move!"));
+    //UE_LOG(LogTemp, Warning, TEXT("Move!"));
 }
 
 
